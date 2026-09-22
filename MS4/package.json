@@ -1,0 +1,23 @@
+{
+  "name": "ms4-comanda-facturacion",
+  "version": "2.0.0",
+  "description": "MS4 - Comanda/Facturacion. Sin base de datos propia; orquesta MS1 (Clientes y Pedidos) y MS2 (Menu y Platos) para armar la cuenta de un pedido.",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "joi": "^17.13.3",
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}

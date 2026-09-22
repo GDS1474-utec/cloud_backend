@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "MS3 - Reservas y Mesas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8003" },
+    { "key": "mesaId", "value": "REEMPLAZAR" },
+    { "key": "reservaId", "value": "REEMPLAZAR" }
+  ],
+  "item": [
+    {
+      "name": "Root",
+      "request": { "method": "GET", "url": "{{baseUrl}}/" }
+    },
+    {
+      "name": "Health",
+      "request": { "method": "GET", "url": "{{baseUrl}}/health" }
+    },
+    {
+      "name": "Listar mesas",
+      "request": { "method": "GET", "url": "{{baseUrl}}/mesas" }
+    },
+    {
+      "name": "Crear mesa",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"numero\": 20,\n  \"capacidad\": 4,\n  \"ubicacion\": \"interior\",\n  \"estado\": \"disponible\",\n  \"descripcion\": \"Cerca de la ventana\"\n}"
+        },
+        "url": "{{baseUrl}}/mesas"
+      }
+    },
+    {
+      "name": "Mesas disponibles",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/mesas/disponibles?fecha=2026-09-18&hora=20:00&personas=4&duracion_minutos=90"
+      }
+    },
+    {
+      "name": "Crear reserva",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente_id\": 1,\n  \"mesa_id\": \"{{mesaId}}\",\n  \"fecha\": \"2026-09-18\",\n  \"hora\": \"20:00\",\n  \"duracion_minutos\": 90,\n  \"cantidad_personas\": 4,\n  \"observaciones\": \"Mesa tranquila\"\n}"
+        },
+        "url": "{{baseUrl}}/reservas"
+      }
+    },
+    {
+      "name": "Listar reservas",
+      "request": { "method": "GET", "url": "{{baseUrl}}/reservas" }
+    },
+    {
+      "name": "Cancelar reserva",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"estado\": \"cancelada\"\n}" },
+        "url": "{{baseUrl}}/reservas/{{reservaId}}/estado"
+      }
+    },
+    {
+      "name": "Analítica por fecha",
+      "request": { "method": "GET", "url": "{{baseUrl}}/analitica/reservas/por-fecha" }
+    }
+  ]
+}
