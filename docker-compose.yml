@@ -49,7 +49,7 @@ services:
       - ms1-api
     environment:
       PORT: 8003
-      MONGO_URI: mongodb://${DB_HOST}:${MS3_DB_PORT:-27017}/${MS3_DB_NAME:-ms3_reservas_db}
+      MONGO_URI: mongodb://${MS3_DB_USER}:${MS3_DB_PASSWORD}@${DB_HOST}:${MS3_DB_PORT:-27017}/${MS3_DB_NAME:-ms3_reservas_db}?authSource=admin
       MS1_URL: http://ms1-api:8000
       MS1_TIMEOUT_MS: ${MS1_TIMEOUT_MS:-3000}
     ports:
