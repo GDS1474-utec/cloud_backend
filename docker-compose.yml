@@ -1,10 +1,11 @@
 services:
+
   # ==========================================
-  # MS1: Clientes y Pedidos (Python + MySQL)
+  # MS1: Clientes (Python + MySQL)
   # ==========================================
   ms1-api:
     build:
-      context: ./MS1
+      context: ./MS1-Clientes
       dockerfile: Dockerfile
     container_name: ms1-api
     restart: unless-stopped
@@ -13,15 +14,12 @@ services:
       DB_PORT: ${MS1_DB_PORT:-3306}
       DB_USER: ${MS1_DB_USER}
       DB_PASSWORD: ${MS1_DB_PASSWORD}
-      DB_NAME: ${MS1_DB_NAME:-ms1_clientes_db}
-      MS2_URL: http://ms2-api:8082
+      DB_NAME: ${MS1_DB_NAME}
     ports:
       - "8000:8000"
-    networks:
-      - backend-network
 
   # ==========================================
-  # MS2: Menu y Platos (Java + PostgreSQL)
+  # MS2: Menú (Java + PostgreSQL)
   # ==========================================
   ms2-api:
     build:
@@ -32,40 +30,37 @@ services:
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${MS2_DB_PORT:-5432}
-      DB_NAME: ${MS2_DB_NAME:-ms2_menu_db}
+      DB_NAME: ${MS2_DB_NAME}
       DB_USER: ${MS2_DB_USER}
       DB_PASSWORD: ${MS2_DB_PASSWORD}
-      PUBLIC_API_URL: ${MS2_PUBLIC_API_URL:-http://localhost:8082}
     ports:
       - "8082:8082"
-    networks:
-      - backend-network
 
   # ==========================================
   # MS3: Reservas y Mesas (Node.js + MongoDB)
   # ==========================================
   ms3-api:
     build:
-      context: ./MS3
+      context: ./MS3-Reservas-y-Mesas
       dockerfile: Dockerfile
     container_name: ms3-api
     restart: unless-stopped
+    depends_on:
+      - ms1-api
     environment:
       PORT: 8003
-      MONGO_URI: mongodb://${MS3_DB_USER}:${MS3_DB_PASSWORD}@${DB_HOST}:${MS3_DB_PORT:-27017}/${MS3_DB_NAME:-ms3_reservas_db}?authSource=admin
+      MONGO_URI: mongodb://${DB_HOST}:${MS3_DB_PORT:-27017}/${MS3_DB_NAME:-ms3_reservas_db}
       MS1_URL: http://ms1-api:8000
       MS1_TIMEOUT_MS: ${MS1_TIMEOUT_MS:-3000}
     ports:
       - "8003:8003"
-    networks:
-      - backend-network
 
   # ==========================================
-  # MS4: Comanda / Facturacion (Node.js, sin BD)
+  # MS4: Facturación
   # ==========================================
   ms4-api:
     build:
-      context: ./MS4
+      context: ./MS4-Facturacion
       dockerfile: Dockerfile
     container_name: ms4-api
     restart: unless-stopped
@@ -77,12 +72,5 @@ services:
       PUBLIC_API_URL: ${MS4_PUBLIC_API_URL:-http://localhost:8083}
       MS1_BASE_URL: http://ms1-api:8000
       MS2_BASE_URL: http://ms2-api:8082
-      HTTP_TIMEOUT_MS: ${MS4_HTTP_TIMEOUT_MS:-5000}
     ports:
       - "8083:8083"
-    networks:
-      - backend-network
-
-networks:
-  backend-network:
-    driver: bridge
