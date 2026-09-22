@@ -1,25 +1,28 @@
 services:
 
   # ==========================================
-  # MS1: Clientes (Python + MySQL)
+  # MS1: Clientes y Pedidos
+  # Python + MySQL
   # ==========================================
   ms1-api:
     build:
-      context: ./MS1-Clientes
+      context: ./MS1
       dockerfile: Dockerfile
     container_name: ms1-api
     restart: unless-stopped
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${MS1_DB_PORT:-3306}
+      DB_NAME: ${MS1_DB_NAME}
       DB_USER: ${MS1_DB_USER}
       DB_PASSWORD: ${MS1_DB_PASSWORD}
-      DB_NAME: ${MS1_DB_NAME}
     ports:
       - "8000:8000"
 
+
   # ==========================================
-  # MS2: Menú (Java + PostgreSQL)
+  # MS2: Menú y Platos
+  # Java + PostgreSQL
   # ==========================================
   ms2-api:
     build:
@@ -36,12 +39,14 @@ services:
     ports:
       - "8082:8082"
 
+
   # ==========================================
-  # MS3: Reservas y Mesas (Node.js + MongoDB)
+  # MS3: Reservas y Mesas
+  # Node.js + MongoDB
   # ==========================================
   ms3-api:
     build:
-      context: ./MS3-Reservas-y-Mesas
+      context: ./MS3
       dockerfile: Dockerfile
     container_name: ms3-api
     restart: unless-stopped
@@ -55,12 +60,15 @@ services:
     ports:
       - "8003:8003"
 
+
   # ==========================================
-  # MS4: Facturación
+  # MS4: Comanda / Facturación
+  # Node.js - Sin BD propia
+  # Consume MS1 + MS2
   # ==========================================
   ms4-api:
     build:
-      context: ./MS4-Facturacion
+      context: ./MS4
       dockerfile: Dockerfile
     container_name: ms4-api
     restart: unless-stopped
